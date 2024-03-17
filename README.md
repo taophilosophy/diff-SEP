@@ -1,8 +1,8 @@
 # diff-SEP
 
-斯坦福哲学百科全书爬取、对比更新脚本
+斯坦福哲学百科全书爬取、对比更新脚本。该 python 脚本使用 ChatGPT 生成。
 
-Python script used for crawling, comparing, and updating the Stanford Encyclopedia of Philosophy.
+Python script used for crawling, comparing, and updating the Stanford Encyclopedia of Philosophy. This Python script is generated using ChatGPT.
 
 首先下载安装 Python 3：<https://www.python.org/downloads/>
 
