@@ -35,40 +35,49 @@ total_titles = len(links)
 with tqdm(total=total_titles, desc="进度") as pbar:
     for link in links:
         link = link.strip()
-        link_parts = link.split(": ")
-        if len(link_parts) == 2:
-            title = link_parts[0].strip().replace(" ", "")
-            link = link_parts[1]
+        last_http_index = link.rfind("http")
+        if last_http_index != -1:
+            title = link[:last_http_index].strip().replace(" ", "")
+            url = link[last_http_index:].strip()
+        else:
+            logging.warning(f"无法提取有效的链接: {link}")
+            failed_links.append(link)
+            continue
 
-            # 提取entries/后面的内容作为文件名
-            entry_content = link.split('https://plato.stanford.edu/entries/')[1]
-            filename = clean_filename(entry_content)  # 清理文件名
+        # 提取entries/后面的内容作为文件名
+        entry_content = re.search(r'/entries/([^/]+)/?$', url)
+        if entry_content:
+            filename = clean_filename(entry_content.group(1))  # 清理文件名
+        else:
+            logging.warning(f"无法提取有效的文件名: {url}")
+            failed_links.append(link)
+            continue
 
-            logging.info(f"正在抓取链接: {link}")
-            try:
-                driver.get(link)
-                if driver.title:
-                    logging.info("成功连接到网站")
+        logging.info(f"正在抓取链接: {url}")
+        try:
+            driver.get(url)
+            if driver.title:
+                logging.info("成功连接到网站")
 
-                    page_source = driver.page_source
-                    soup = BeautifulSoup(page_source, 'html.parser')
-                    content_div = soup.find('div', {'id': 'content'})
-                    if content_div:
-                        content = content_div.get_text(separator='\n')
-                        file_path = os.path.join("SEP", f"{filename}.txt")
-                        if not os.path.exists(file_path):
-                            with open(file_path, "w", encoding='utf-8') as f:
-                                f.write(content)
-                            logging.info(f"成功写入内容到文件: {file_path}")
-                        else:
-                            logging.warning(f"文件已存在: {file_path}。跳过。")
+                page_source = driver.page_source
+                soup = BeautifulSoup(page_source, 'html.parser')
+                content_div = soup.find('div', {'id': 'content'})
+                if content_div:
+                    content = content_div.get_text(separator='\n')
+                    file_path = os.path.join("SEP", f"{filename}.txt")
+                    if not os.path.exists(file_path):
+                        with open(file_path, "w", encoding='utf-8') as f:
+                            f.write(content)
+                        logging.info(f"成功写入内容到文件: {file_path}")
                     else:
-                        logging.warning("无法在页面上找到内容。")
+                        logging.warning(f"文件已存在: {file_path}。跳过。")
                 else:
-                    logging.warning("连接失败")
-            except Exception as e:
-                logging.error(f"抓取链接失败: {link}。错误: {e}")
-                failed_links.append(link)
+                    logging.warning("无法在页面上找到内容。")
+            else:
+                logging.warning("连接失败")
+        except Exception as e:
+            logging.error(f"抓取链接失败: {url}。错误: {e}")
+            failed_links.append(link)
         
         pbar.update(1)
 
