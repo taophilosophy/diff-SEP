@@ -4,9 +4,10 @@
 
 Python script used for crawling, comparing, and updating the Stanford Encyclopedia of Philosophy. This Python script is generated using ChatGPT.
 
-首先下载安装 Python 3：<https://www.python.org/downloads/>
 
-用法：
+## 用法
+
+首先下载安装 Python 3：<https://www.python.org/downloads/>
 
 ```
 $ pip install -r requirements.txt
