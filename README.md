@@ -13,7 +13,7 @@ Python script used for crawling, comparing, and updating the Stanford Encycloped
 
 **chromedriver.exe** 的版本号必须与你当前的 Chrome 版本尽可能靠近。可能最后的小版本会差几位数。（如果你没有 Chrome 你可能需要安装一下）
 
-修改  2.py 中的 `driver_path = "C:\\Users\\ykla\\chromedriver.exe"` 为你的 chromedriver.exe 正确的路径。
+修改 `2.py` 中的 `driver_path = "C:\\Users\\ykla\\chromedriver.exe"` 为你的 `chromedriver.exe` 所在正确的路径。
 
 ```
 $ pip install -r requirements.txt
